@@ -10,7 +10,7 @@ public class Erro {
         if (TeatroMagico.logIndex < TeatroMagico.logs.length) {
             TeatroMagico.logs[TeatroMagico.logIndex++] = log;
         } else {
-            System.out.println("Limite de logs atingido.");
+            System.out.println(" ");
         }
     }
 
