@@ -69,7 +69,6 @@ public class TeatroMagico {
             for (int i = 0; i < logIndex; i++) {
                 System.out.println(logs[i]);
 
-
             }
         }
     }
