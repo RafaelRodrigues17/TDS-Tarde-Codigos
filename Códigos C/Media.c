@@ -17,7 +17,6 @@ int main() {
         if (strcmp(entrada, "sair") == 0) {
             break;
         }
-
   
         char *endptr;
         double numero = strtod(entrada, &endptr);
