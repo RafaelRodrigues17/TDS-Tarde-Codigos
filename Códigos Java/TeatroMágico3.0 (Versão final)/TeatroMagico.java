@@ -74,7 +74,7 @@ public class TeatroMagico {
     public static void registrarLog(String status, int andar, int coluna, int linha) {
         if (logIndex < logs.length) {
             String timestamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date());
-            String log = timestamp + " - Assento: A" + andar + " L" + linha + " I" + coluna + " - Status: " + status;
+            String log = timestamp + " - Assento: A" + andar + " L" + linha + " C" + coluna + " - Status: " + status;
             logs[logIndex++] = log;
         }
 
