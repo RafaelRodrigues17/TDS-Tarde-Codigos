@@ -65,7 +65,7 @@ public class TeatroMagico {
     public static void mostrarLogs() {
         if (logIndex == 0) {
             System.out.println("Nenhum assento vendido foi registrado.");
-        } else {
+        }else {
             for (int i = 0; i < logIndex; i++) {
                 System.out.println(logs[i]);
 
