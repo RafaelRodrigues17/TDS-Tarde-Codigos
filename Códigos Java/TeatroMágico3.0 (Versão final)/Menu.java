@@ -9,6 +9,7 @@ public class Menu {
         System.out.println("3. Liberar assento");
         System.out.println("4. Mostrar os logs");
         System.out.println("5. Sair");
+        System.out.println("6. Exibir lucros do teatro");
     }
 
     public static void opcoes(int opcao, Scanner scanner, String[][][] teatro) {
@@ -17,16 +18,22 @@ public class Menu {
                 TeatroMagico.exibirAssentos(teatro);
                 break;
             case 2:
-                System.out.print("Digite o andar: ");
-                int andar = scanner.nextInt();
-                System.out.print("Digite a coluna: ");
-                int coluna = scanner.nextInt();
-                System.out.print("Digite a linha: ");
-                int linha = scanner.nextInt();
-                if (TeatroMagico.venderIngresso(teatro, andar, coluna, linha)) {
-                    System.out.println("Ingresso vendido com sucesso!");
-                }
-                break;
+            System.out.print("Digite o andar: ");
+            int andar = scanner.nextInt();
+            System.out.print("Digite a coluna: ");
+            int coluna = scanner.nextInt();
+            System.out.print("Digite a linha: ");
+            int linha = scanner.nextInt();
+
+            if (TeatroMagico.venderIngresso(teatro, andar, coluna, linha)) {
+            if (Pagamentos.realizarPagamento()) {
+            System.out.println("Ingresso vendido com sucesso!");
+            } else {
+               System.out.println("Venda cancelada devido a falha no pagamento.");
+               TeatroMagico.liberarIngresso(teatro, andar, coluna, linha); // Libera o assento caso falhe.
+               }
+            }
+              break;
             case 3:
                 System.out.print("Digite o andar: ");
                 andar = scanner.nextInt();
@@ -35,7 +42,7 @@ public class Menu {
                 System.out.print("Digite a linha: ");
                 linha = scanner.nextInt();
                 if (TeatroMagico.liberarIngresso(teatro, andar, coluna, linha)) {
-                    System.out.println("Ingresso liberado com sucesso!");
+                System.out.println("Ingresso liberado com sucesso!");
                 }
                 break;
             case 4:
@@ -46,6 +53,9 @@ public class Menu {
                 break;
             default:
                 System.out.println("Opção inválida! Tente novamente.");
+                case 6:
+                Pagamentos.exibirLucros();
+                break;
         }
     }
 }
