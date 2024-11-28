@@ -33,7 +33,6 @@ public class Main {
                 Menu.opcoes(opcao, scanner, teatro);
                 break;
             }
-               
             Menu.opcoes(opcao, scanner, teatro);
             }
             TeatroMagico.mostrarLogs();
