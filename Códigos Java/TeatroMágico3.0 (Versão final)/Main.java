@@ -29,8 +29,11 @@ public class Main {
                 break;
             }
             Menu.opcoes(opcao, scanner, teatro);
-        }
+               }
+               TeatroMagico.mostrarLogs();
+                  }
+                  if (opcao == 6) {
+                  Pagamentos.exibirLucros();
+                  }
 
-        TeatroMagico.mostrarLogs();
-    }
 }
