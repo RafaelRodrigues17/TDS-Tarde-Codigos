@@ -22,7 +22,7 @@ def exibir_menu():
     print("\n")
     
 def voltar_menu():
-    input("\nAperte ENTER para volatar ao menu principal: ")
+    input("\nAperte ENTER para voltar ao menu principal: ")
     principal()
     
 def exibir_ingredientes():
