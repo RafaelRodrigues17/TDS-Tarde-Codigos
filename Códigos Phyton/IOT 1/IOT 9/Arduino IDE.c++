@@ -1,0 +1,26 @@
+#include <SPI.h>
+#include <Ethernet.h>
+byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0x0A};
+//byte mac[] = {0xDE,0xAD,0xBE,0xEF,0xFE,0xED};
+IPAddress ip(192,168,1,157); // coloque um IP livre
+EthernetServer server(5000);
+const int LED = 7;
+
+void setup() {
+  pinMode(LED, OUTPUT);
+  Ethernet.begin(mac, ip); // pode usar Ethernet.begin(mac) p/ DHCP
+  server.begin();
+}
+
+void loop() {
+  EthernetClient client = server.available();
+  if (client) {
+    String cmd = client.readStringUntil('\n'); // espera linha
+    cmd.trim();
+    if (cmd == "ligar") digitalWrite(LED, HIGH);
+    else if (cmd == "desligar")digitalWrite(LED, LOW);
+    client.println("OK\n"); // simples ACK
+    client.stop();
+  }
+  
+}
