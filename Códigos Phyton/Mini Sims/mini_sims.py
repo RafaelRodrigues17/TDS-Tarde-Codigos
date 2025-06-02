@@ -1,3 +1,4 @@
+
 class Personagem:
     def __init__(self, nome):
         self.nome = nome
@@ -40,15 +41,22 @@ class Personagem:
             return f"{self.nome} dormiu e recuperou mental e energia!"
 
     def trabalhar(self):
-        if self.energia < 35:
+        if not self.trabalho:
+            return f"{self.nome} não tem um trabalho no momento."
+        if self.trabalho_nivel == 0:
+            return f"{self.nome} ainda não foi contratado."
+
+        energia_gasta, higiene_gasta, mental_usado, saude_afetada = self.trabalho.estatisticas_por_cargo(self.trabalho_nivel)
+        if self.energia < energia_gasta:
             return f"{self.nome} está muito cansado para trabalhar!"
-        
-        self.energia = max(0, self.energia - 30)
-        self.mental = max(0, self.mental - 30) 
-        self.dinheiro += 40
-        self.higiene = max(0, self.higiene - 30)
-        
-        return f"{self.nome} trabalhou"
+
+        self.energia = max(0, self.energia - energia_gasta)
+        self.higiene = max(0, self.higiene - higiene_gasta)
+        self.mental = max(0, self.mental - mental_usado)
+        self.saude = max(0, self.saude - saude_afetada)
+        self.dinheiro += self.trabalho.salario_por_cargo(self.trabalho_nivel)
+
+        return f"{self.nome} trabalhou como {self.trabalho.ver_cargo(self.trabalho_nivel)}"
 
     def tomar_banho(self):
         if self.higiene == 100:
@@ -56,7 +64,6 @@ class Personagem:
         self.higiene = 100
         self.energia = max(0, self.energia - 2)
         self.mental = max(0, self.mental + 10)
-        
         return f"{self.nome} tomou banho!"
 
     def mostrar_status(self):
@@ -75,33 +82,39 @@ class Personagem:
         self.trabalho_nivel = 1
         return f"{self.nome} foi contratado na carreira de {self.trabalho.carreira} no cargo {self.trabalho.ver_cargo(self.trabalho_nivel)}"
 
-    def ser_demitido(self, objeto_trabalho):
+    def ser_demitido(self):
         self.trabalho = None
-        self.trabalho_nivel = 0  # Corrigido: estava como self._trabalho_nivel
+        self.trabalho_nivel = 0  
 
-    def pedir_demissao(self, objeto_trabalho):
+    def pedir_demissao(self):
+        if self.trabalho:
+            mensagem = f"{self.nome} pediu demissão da carreira de {self.trabalho.carreira}"
+        else:
+            mensagem = f"{self.nome} não tem trabalho para pedir demissão"
         self.trabalho = None
         self.trabalho_nivel = 0
-        return f"{self.nome} pediu demissão da carreira de {objeto_trabalho.carreira}"
+        return mensagem
+
+    def definir_trabalho(self, trabalho):
+        self.trabalho = trabalho
+        self.trabalho_nivel = 1
 
 
 class Trabalho:
-    def __init__(self, carreira, cargos, salarios, higiene, energia, mental):
+    def __init__(self, carreira, cargos, salarios, higiene_por_cargo, energia_por_cargo, mental_por_cargo, saude_por_cargo):
         self.__carreira = carreira
         self.__cargos = cargos
         self.__salarios = salarios
-        self.__higiene_usada = higiene
-        self.__energia_gasta = energia
-        self.__mental_usado = mental
+        self.__higiene_por_cargo = higiene_por_cargo
+        self.__energia_por_cargo = energia_por_cargo
+        self.__mental_por_cargo = mental_por_cargo
+        self.__saude_por_cargo = saude_por_cargo
 
     @property
     def informacoes(self):
         return f'''Carreira: {self.__carreira}
 Cargos: {self.__cargos}
-Salários: {self.__salarios}
-Energia necessária: {self.__energia_gasta}
-Higiene usada: {self.__higiene_usada}
-Mental usado: {self.__mental_usado}'''
+Salários: {self.__salarios}'''
 
     @property
     def carreira(self):
@@ -113,18 +126,13 @@ Mental usado: {self.__mental_usado}'''
         else:
             return "Cargo inválido"
 
+    def salario_por_cargo(self, nivel):
+        return self.__salarios[nivel - 1]
 
-# Execução de teste
-if __name__ == '__main__':
-    carreira = "Motorista"
-    cargos = ["Motorista de Ônibus", "Uber", "Taxista"]
-    salarios = [2500, 3000, 3500]
-    higiene = 50
-    energia = 70
-    mental = 35
-
-    objeto_trabalho = Trabalho(carreira, cargos, salarios, higiene, energia, mental)
-    print(objeto_trabalho.informacoes)
-
-    objeto_personagem = Personagem("Rogério")
-    print(objeto_personagem.ser_contratado(objeto_trabalho))
+    def estatisticas_por_cargo(self, nivel):
+        return (
+            self.__energia_por_cargo[nivel - 1],
+            self.__higiene_por_cargo[nivel - 1],
+            self.__mental_por_cargo[nivel - 1],
+            self.__saude_por_cargo[nivel - 1]
+        )
